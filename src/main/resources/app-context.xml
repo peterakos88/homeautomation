@@ -6,8 +6,7 @@
 						http://www.springframework.org/schema/data/mongo
           				http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 	
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:env.properties"/>
-	</bean>
+
+	
     		
 </beans>
