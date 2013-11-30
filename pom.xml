@@ -9,6 +9,7 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	
 	<repositories>
+	
 		<repository>
 			<id>oss-snapshots-repo</id>
 			<name>Sonatype OSS Maven Repository</name>
@@ -18,17 +19,22 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
+		
 	</repositories>
 	
 	<properties>
-		<java-version>1.6</java-version>
+		<java-version>1.7</java-version>
 		<org.springframework-version>3.2.4.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<apache-tiles.version>3.0.1</apache-tiles.version>
-		<jetty-version>9.1.0.M0</jetty-version>
+		
+		<jetty-maven-plugin>9.1.0.M0</jetty-maven-plugin>
 		
 		<pi4j.version> 0.0.5</pi4j.version>
+		
+		
+		<context-path>/pihome</context-path>
 		
 	</properties>
 
@@ -175,14 +181,7 @@
 			<version>${apache-tiles.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
-		
-
-<!-- 		<dependency> -->
-<!-- 		  <groupId>org.eclipse.jetty</groupId> -->
-<!-- 		  <artifactId>jetty-project</artifactId> -->
-<!-- 		  <version>${jetty-version}</version> -->
-<!-- 		</dependency>		 -->
+		</dependency>	
 		
 		
 		<dependency>
@@ -219,13 +218,55 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
+			
+			<!-- Jetty plugin -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jetty-maven-plugin}</version>
+
+				<configuration>
+				<scanIntervalSeconds>5</scanIntervalSeconds>
+					<webApp>
+						<contextPath>/${context-path}</contextPath>
+					</webApp>
+				</configuration>
+
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<warName>${context-path}</warName>
+					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+				</configuration>
+			</plugin>
+			
+			
+
+
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<url>${tomcat.manager}</url>
+					<username>${tomcat.manager.username}</username>
+					<password>${tomcat.manager.password}</password>
+					<warFile>${tomcat.server.manager.deployment.source.war}</warFile>
+					<path>/${context-path}</path>
+					<update>true</update>
+				</configuration>
+			</plugin>			
 
 
 		</plugins>
